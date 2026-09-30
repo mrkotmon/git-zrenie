@@ -31,13 +31,11 @@
 
 Figma: https://www.figma.com/design/0cewODosFvpQXMtYZBgfpq/Untitled?node-id=0-1&t=9ZgASI9YIkHCZdVG-1
 
-### Лендинг
-![Лендинг](docs/img/landing.png)
+## Поиск
+![Поиск](img/search.png)
 
 ### Граф 2.5D
 ![Граф](docs/img/graph-iso.png)
-![Вид сверху](docs/img/graph-top.png)
-![Тема Бумага](docs/img/graph-paper.png)
 
 ### Настройки
 ![Настройки](docs/img/settings.png)

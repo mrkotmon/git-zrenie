@@ -14,6 +14,7 @@ Figma:https://www.figma.com/design/0cewODosFvpQXMtYZBgfpq/Untitled?node-id=0-1&t
 ## Граф 2.5D
 ![Граф](img/graph-iso.png)
 ![Вид сверху](img/graph-top.png)
+![Вид сбоку](img/graph-side.png)
 ![Тема Бумага](img/graph-paper.png)
 
 ## Новичку
@@ -21,6 +22,9 @@ Figma:https://www.figma.com/design/0cewODosFvpQXMtYZBgfpq/Untitled?node-id=0-1&t
 
 ## Тимлиду и скрам-мастеру
 ![Тимлиду](img/lead.png)
+
+## Поиск
+![Поиск](img/search.png)
 
 ## Настройки
 ![Настройки](img/settings.png)
