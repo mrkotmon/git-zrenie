@@ -92,7 +92,7 @@ make run               # docker compose up --build
 
 ## Как мы работаем
 
-GitHub Flow: короткие ветки от `main`, PR с ревью, прямые коммиты в `main` запрещены. Каждая контрольная точка отмечается тегом `g1`, `g2`… Подробно — [CONTRIBUTING.md](CONTRIBUTING.md) и [docs/git-workflow.md](docs/git-workflow.md).
+GitHub Flow: короткие ветки от `main`, PR с ревью, прямые коммиты в `main` запрещены. Каждая контрольная точка отмечается тегом `g1`, `g2`… Подробно — [docs/Contributing.md](docs/Contributing.md) и [docs/git-workflow.md](docs/git-workflow.md).
 
 ## Лицензия
 
