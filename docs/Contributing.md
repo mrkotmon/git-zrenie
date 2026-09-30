@@ -4,7 +4,7 @@
 2. Создайте ветку от свежего `main`:
    ```bash
    git checkout main && git pull
-   git checkout -b docs/P2.1-architecture
+   git checkout -b branchname
    ```
 3. Коммиты — маленькие и осмысленные, в повелительном наклонении:
    ```
