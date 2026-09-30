@@ -39,18 +39,20 @@
 
 | Слой | Технологии | Зачем |
 | --- | --- | --- |
-| Frontend | React 18, TypeScript, Vite | быстрая сборка |
-| Состояние | Redux Toolkit | предсказуемые срезы, DevTools, RTK Query для /api |
-| UI | MUI | готовые доступные компоненты, тёмная тема |
+| Язык | **JavaScript** (ES2022) + JSDoc |контракты проверяются в рантайме |
+| Frontend | React 19, Vite 6, React Router 7 | быстрая сборка |
+| Состояние | Redux Toolkit 2 + RTK Query | предсказуемые срезы, DevTools, запросы к /api |
+| UI | MUI 7 + Data Grid | доступные компоненты, тёмная тема, таблицы |
 | Визуализация | Canvas 2D API | тысячи узлов, ручная 2.5D-проекция |
 | Вычисления | Web Worker | анализ 10 000+ коммитов без блокировки интерфейса |
-| Кэш | IndexedDB (`idb`) | повторное открытие разбора без сети |
-| Backend | Node.js, Fastify, `simple-git` | OAuth, клонирование, прокси к GitHub |
-| БД | PostgreSQL | пользователи и история разборов |
-| Тесты | Vitest, Testing Library, Playwright, MSW | unit, компоненты, e2e, моки GitHub |
+| Кэш, PWA | IndexedDB (`idb`), `vite-plugin-pwa` | открытие разбора без сети |
+| Шлюз | Node.js 22, Fastify 5 | OAuth, сессии, проксирование |
+| Анализ | Java 21, Spring Boot 3, JGit | клонирование, история, GitHub API |
+| Хранилища | PostgreSQL 16, Redis 7 | история разборов; сессии и кэш |
+| Тесты | Vitest, Testing Library, Playwright, MSW, nock | unit, компоненты, e2e, моки |
+| Качество | ESLint 9, Prettier, Stylelint | линтеры по требованию методички |
+| Мониторинг | Sentry, Яндекс Метрика | ошибки и аналитика |
 | Инфраструктура | Docker Compose, GitHub Actions | `make run`, CI |
-
-Обоснование выбора: [docs/ui-stack.md](docs/ui-stack.md)
 
 
 
