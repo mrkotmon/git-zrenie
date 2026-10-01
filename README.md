@@ -35,7 +35,7 @@
 
 [Figma](https://www.figma.com/board/lH1c6Etjb7ea3BNJ9L82lN/Git-zrenie-architecture?node-id=0-1&t=I73SBjnQQUOJOoLh-1)
 
-![](docs/img/git-zrenie-architecture.png)
+![Архитектура Git Зрения](docs/img/git-zrenie-architecture.png)
 
 ## Стек
 
