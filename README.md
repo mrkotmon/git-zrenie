@@ -31,8 +31,8 @@
 
 Figma: https://www.figma.com/design/0cewODosFvpQXMtYZBgfpq/Untitled?node-id=0-1&t=9ZgASI9YIkHCZdVG-1
 
-## Поиск
-![Поиск](img/search.png)
+### Поиск
+![Поиск](docs/img/search.png)
 
 ### Граф 2.5D
 ![Граф](docs/img/graph-iso.png)
