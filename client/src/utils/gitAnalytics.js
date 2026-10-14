@@ -142,7 +142,7 @@ export function generateBranchColor(branchName) {
   }
   
   const hue = Math.abs(hash % 360);
-  return `hsl(${hue}, 70%, 60%)`.replace(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/, (match, h, s, l) => {
+  return `hsl(${hue}, 70%, 60%)`.replace(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/, (match, _h, _s, _l) => {
     return match; 
   });
 }
