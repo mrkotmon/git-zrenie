@@ -11,7 +11,7 @@
 export function categorizeCommitMessage(message) {
   if (!message || typeof message !== 'string') return 'other';
   const lowerMsg = message.toLowerCase();
-  
+
   if (lowerMsg.includes('merge pull request') || lowerMsg.includes('merge branch')) {
     return 'merge';
   }
@@ -41,11 +41,11 @@ export function categorizeCommitMessage(message) {
  */
 export function getBranchStatus(lastCommitDate, openPrCount) {
   if (!lastCommitDate) return 'abandoned';
-  
+
   const lastCommitTime = new Date(lastCommitDate).getTime();
   const now = Date.now();
   const daysSinceLastCommit = (now - lastCommitTime) / (1000 * 60 * 60 * 24);
-  
+
   if (openPrCount > 0 && daysSinceLastCommit < 3) {
     return 'active';
   }
@@ -71,17 +71,17 @@ export function getBranchStatus(lastCommitDate, openPrCount) {
  */
 export function findClickedCommit(mouseX, mouseY, projectedCommits) {
   if (!projectedCommits || projectedCommits.length === 0) return null;
-  
+
   // Фильтруем коммиты, в которые попал клик, и сортируем по глубине (ближние первыми)
   const hits = projectedCommits
-    .filter(commit => {
+    .filter((commit) => {
       const dx = mouseX - commit.sx;
       const dy = mouseY - commit.sy;
       const distance = Math.sqrt(dx * dx + dy * dy);
       return distance <= commit.radius;
     })
     .sort((a, b) => b.depth - a.depth);
-    
+
   return hits.length > 0 ? hits[0].sha : null;
 }
 
@@ -93,9 +93,9 @@ export function findClickedCommit(mouseX, mouseY, projectedCommits) {
  */
 export function calculateFileOwnership(fileHistory) {
   if (!fileHistory || !Array.isArray(fileHistory)) return {};
-  
+
   const stats = {};
-  
+
   for (const record of fileHistory) {
     if (!stats[record.file]) {
       stats[record.file] = {};
@@ -105,12 +105,12 @@ export function calculateFileOwnership(fileHistory) {
     }
     stats[record.file][record.author] += record.linesChanged;
   }
-  
+
   const ownership = {};
   for (const [file, authors] of Object.entries(stats)) {
     let maxLines = -1;
     let mainAuthor = 'unknown';
-    
+
     for (const [author, lines] of Object.entries(authors)) {
       if (lines > maxLines) {
         maxLines = lines;
@@ -119,7 +119,7 @@ export function calculateFileOwnership(fileHistory) {
     }
     ownership[file] = mainAuthor;
   }
-  
+
   return ownership;
 }
 
@@ -134,15 +134,18 @@ export function generateBranchColor(branchName) {
   if (branchName === 'develop') return '#3b82f6'; // blue-500
   if (branchName.startsWith('hotfix/')) return '#ef4444'; // red-500
   if (branchName.startsWith('release/')) return '#f59e0b'; // amber-500
-  
+
   // Простой хеш строки для генерации цвета
   let hash = 0;
   for (let i = 0; i < branchName.length; i++) {
     hash = branchName.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   const hue = Math.abs(hash % 360);
-  return `hsl(${hue}, 70%, 60%)`.replace(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/, (match, _h, _s, _l) => {
-    return match; 
-  });
+  return `hsl(${hue}, 70%, 60%)`.replace(
+    /hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/,
+    (match, _h, _s, _l) => {
+      return match;
+    },
+  );
 }
