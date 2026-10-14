@@ -16,7 +16,7 @@ export default function App() {
   const nodes = layoutCommits(demo);
   return (
     <main>
-      <h1>Git Зрение</h1>
+      <h1>Comepletely another project</h1>
       <p>Понять чужой репозиторий за час, а не за неделю.</p>
       <p data-testid="commit-count">Коммитов в демо: {nodes.length}</p>
       <a href="https://github.com/login/oauth/authorize">Войти через GitHub</a>
