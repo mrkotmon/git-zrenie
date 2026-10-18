@@ -60,7 +60,7 @@ export function layoutCommits(commits) {
  */
 export function project(p, yaw, pitch) {
   const rx = p.x * Math.cos(yaw) - p.z * Math.sin(yaw);
-  const rz = p.x * Math.sin(yaw) + p.z * Math.cos(yaw);
+  const rz=p.x*Math.sin(yaw)+p.z*Math.cos(yaw);
   return {
     sx: Math.round(rx * 1000) / 1000,
     sy: Math.round((rz * Math.sin(pitch) - p.y * Math.cos(pitch)) * 1000) / 1000,
