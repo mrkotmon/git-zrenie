@@ -13,7 +13,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary'],
       include: ['src/**/*.{js,jsx}'],
-      exclude: ['src/main.jsx', 'src/setupTests.js', 'src/**/*.test.{js,jsx}'],
+      exclude: [
+        'src/main.jsx',
+        'src/setupTests.js',
+        'src/**/*.test.{js,jsx}',
+        'src/mocks/handlers.js',
+      ],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },

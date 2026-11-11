@@ -9,6 +9,14 @@ import './index.css';
 import App from './App.jsx';
 import { store } from './store/store.js';
 import { theme } from './theme/theme.js';
+import { setupWorker } from 'msw/browser';
+import { handlers } from './mocks/handlers.js';
+
+// В dev-режиме MSW моки для авторизации
+if (import.meta.env.DEV) {
+  const worker = setupWorker(...handlers);
+  worker.start();
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
