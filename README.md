@@ -71,6 +71,35 @@ Figma: https://www.figma.com/design/0cewODosFvpQXMtYZBgfpq/Untitled?node-id=0-1&
 | Инфраструктура | Docker Compose, GitHub Actions | `make run`, CI |
 
 
+## База данных
+
+Проект использует **PostgreSQL 16**. Схема разворачивается автоматически при первом запуске контейнера БД через Docker (см. раздел «Запуск»).
+
+### Схема данных
+
+![Схема базы данных Git Зрения](docs/img/database-schema.png)
+
+### Таблицы
+
+| Таблица | Основные поля | Назначение |
+|---------|---------------|------------|
+| `users` | `id`, `github_id` (unique), `login`, `avatar_url`, `created_at` | Учёт пользователя после входа через GitHub |
+| `repositories` | `id`, `github_id` (unique), `owner_login`, `name`, `url`, `is_private`, `default_branch` | Общая запись о репозитории |
+| `runs` | `id`, `user_id`, `repository_id`, `status`, `period_start`, `period_end`, `ref_name`, `result`, `created_at` | Один запуск анализа и его результат |
+| `sprints` (G5) | `id`, `user_id`, `repository_id`, `name`, `start_at`, `end_at`, `branch`, `created_at` | Именованный период для анализа коммитов |
+
+### Авторизация и привязка к БД
+
+Вход реализован через **GitHub OAuth**. Пароль пользователя в базе **не хранится**. Вместо этого используется стабильный `github_id` из профиля GitHub.
+
+Поток входа:
+1. Пользователь нажимает «Войти через GitHub» на странице `/login`.
+2. Бэкенд редиректит на GitHub OAuth.
+3. После подтверждения GitHub возвращает код `?code=...` на `/login`.
+4. Фронт отправляет этот код на `POST /api/auth/github/callback`.
+5. Бэкенд обменивает код на профиль GitHub, создаёт/обновляет строку в таблице `users` и устанавливает сессионную куку.
+6. При последующих посещениях front проверяет сессию через `GET /api/auth/me`.
+
 
 ## Команда
 
@@ -101,6 +130,7 @@ make run               # docker compose up --build
 ├── docs/              # документация, схемы, спецификации
 │   ├── img/           # скриншоты макетов и схем
 │   └── presentations/ # презентации контрольных точек
+├── database/          # база данных
 ├── .github/           # шаблон PR, CI — с G3
 ├── CONTRIBUTING.md
 └── README.md

@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import heroGraph from '../../../assets/images/hero-graph.png';
 import GithubIcon from '../../../components/icons/GithubIcon.jsx';
 
@@ -32,7 +33,8 @@ export default function Hero() {
               variant="outlined"
               color="inherit"
               size="large"
-              href="#features"
+              component={RouterLink}
+              to="/graph"
             >
               Посмотреть демо
               <span className="hero__arrow" aria-hidden="true">
