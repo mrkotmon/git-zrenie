@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import logoUrl from '../../assets/icons/logo.svg';
 import GithubIcon from '../../components/icons/GithubIcon.jsx';
 import { AUTH_ENDPOINTS, exchangeGithubCode, fetchCurrentUserApi } from '../../lib/authApi.js';
-import { setUser, clearError, setInitialized } from '../../store/authSlice.js';
+import { logoutUser, setUser, setInitialized } from '../../store/authSlice.js';
 import './Login.css';
 
 const PERMISSIONS = [
@@ -49,51 +49,56 @@ export default function Login() {
   const { user, loading, isAuthenticated, initialized } = useSelector((state) => state.auth);
 
   const code = searchParams.get('code');
+  const state = searchParams.get('state');
+  const [authError, setAuthError] = useState(null);
+  // Код GitHub одноразовый: в StrictMode эффект запускается дважды, второй обмен не нужен.
+  const exchangedCode = useRef(null);
 
   useEffect(() => {
-    // Если пришёл code из GitHub — обмениваем его на бэкенде
     if (code) {
-      exchangeGithubCode(code)
+      if (exchangedCode.current === code) return;
+      exchangedCode.current = code;
+      exchangeGithubCode(code, state)
         .then((data) => {
           dispatch(setUser(data.user));
-          // Чистим URL от параметра code, чтобы не было повторной отправки при обновлении
+          // Убираем code из адреса, чтобы при обновлении страницы не отправлять его снова
           window.history.replaceState({}, document.title, window.location.pathname);
         })
         .catch((err) => {
-          console.error('GitHub auth error:', err);
-          dispatch(clearError());
+          setAuthError(err.message || 'Не удалось войти через GitHub.');
+          dispatch(setInitialized());
         });
     } else if (!initialized && !loading) {
-      // Проверяем Existing сессию (пользователь уже был авторизован ранее в БД)
+      // Проверяем, есть ли уже сессия на сервере
       fetchCurrentUserApi()
         .then((data) => {
           if (data) dispatch(setUser(data));
           else dispatch(setInitialized());
         })
         .catch(() => {
-          // Сессии нет — просто оставляем на странице логина
           dispatch(setInitialized());
         });
     }
-  }, [code, dispatch, initialized, loading]);
+  }, [code, state, dispatch, initialized, loading]);
 
-  // Уже авторизован — Redirect на главную
+  // Уже вошёл: показываем, кто в системе (данные из таблицы users)
   if (isAuthenticated || (initialized && user)) {
     return (
-      <main
-        className="login-page"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-        }}
-      >
-        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <Button variant="contained" size="large" fullWidth sx={{ maxWidth: 400, mt: 2 }}>
+      <main className="login-page login-page--centered">
+        <section className="login__signed-in" aria-label="Вы вошли">
+          {user?.avatar_url && (
+            <img className="login__avatar" src={user.avatar_url} alt="" width="72" height="72" />
+          )}
+          <p className="login__signed-in-text">
+            Вы вошли как <strong>@{user?.login}</strong>
+          </p>
+          <Button variant="contained" size="large" component={Link} to="/">
             Продолжить в приложение
           </Button>
-        </Link>
+          <Button variant="outlined" color="inherit" onClick={() => dispatch(logoutUser())}>
+            Выйти
+          </Button>
+        </section>
       </main>
     );
   }
@@ -101,16 +106,8 @@ export default function Login() {
   // Загрузка сессии — показываем заглушку
   if (loading && !initialized) {
     return (
-      <main
-        className="login-page"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-        }}
-      >
-        <div style={{ color: 'var(--gz-text-secondary)' }}>Вход…</div>
+      <main className="login-page login-page--centered">
+        <div className="login__loading">Вход…</div>
       </main>
     );
   }
@@ -142,6 +139,12 @@ export default function Login() {
               Мы читаем историю репозиториев от вашего имени, поэтому вход только через GitHub.
               Пароль не нужен.
             </p>
+
+            {authError && (
+              <p className="login__error" role="alert">
+                {authError}
+              </p>
+            )}
 
             <Button
               className="login__oauth"

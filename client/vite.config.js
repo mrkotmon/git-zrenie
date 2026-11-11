@@ -5,6 +5,8 @@ export default defineConfig({
   // На GitHub Pages сайт лежит в /git-zrenie/, локально — в корне.
   base: process.env.BASE_PATH || '/',
   plugins: [react()],
+  // npm run dev: запросы к /api уходят на сервер из папки server (порт 3001).
+  server: { proxy: { '/api': 'http://127.0.0.1:3001' } },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.js'],

@@ -2,6 +2,9 @@
 node_modules/
 dist/
 
+# Локальная база PGlite (server, без Docker)
+.data/
+
 # Отчёты тестов
 coverage/
 playwright-report/
