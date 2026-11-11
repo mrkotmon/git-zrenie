@@ -46,5 +46,10 @@
   },
   "engines": {
     "node": ">=22.12"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

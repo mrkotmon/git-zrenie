@@ -53,7 +53,7 @@ describe('authSlice extraReducers: fetchCurrentUser', () => {
   it('fulfilled сохраняет пользователя и сбрасывает loading', () => {
     const state = reducer(
       { ...initialState, loading: true },
-      fetchCurrentUser.fulfilled(demoUser, 'requestId')
+      fetchCurrentUser.fulfilled(demoUser, 'requestId'),
     );
     expect(state.loading).toBe(false);
     expect(state.user).toEqual(demoUser);
@@ -65,7 +65,7 @@ describe('authSlice extraReducers: fetchCurrentUser', () => {
   it('rejected сбрасывает loading и isAuthenticated', () => {
     const state = reducer(
       { ...initialState, loading: true },
-      fetchCurrentUser.rejected(new Error('no session'), 'requestId')
+      fetchCurrentUser.rejected(new Error('no session'), 'requestId'),
     );
     expect(state.loading).toBe(false);
     expect(state.isAuthenticated).toBe(false);
@@ -78,7 +78,7 @@ describe('authSlice extraReducers: logoutUser', () => {
   it('fulfilled очищает пользователя и сбрасывает флаги', () => {
     const state = reducer(
       { ...initialState, user: demoUser, isAuthenticated: true },
-      logoutUser.fulfilled(null, 'requestId')
+      logoutUser.fulfilled(null, 'requestId'),
     );
     expect(state.user).toBe(null);
     expect(state.isAuthenticated).toBe(false);

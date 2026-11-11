@@ -15,25 +15,22 @@ export const fetchCurrentUser = createAsyncThunk(
       return rejectWithValue(await res.text());
     }
     return res.json();
-  }
+  },
 );
 
 /**
  * Выход пользователя — бэкенд уничтожает сессию и чистит запись о сессии.
  */
-export const logoutUser = createAsyncThunk(
-  'auth/logoutUser',
-  async (_, { rejectWithValue }) => {
-    const res = await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-    if (!res.ok) {
-      return rejectWithValue(await res.text());
-    }
-    return null;
+export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
+  const res = await fetch('/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    return rejectWithValue(await res.text());
   }
-);
+  return null;
+});
 
 const initialState = {
   user: null,

@@ -43,7 +43,7 @@
 }
 
 .login__card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -60px;
   left: -60px;
@@ -57,7 +57,7 @@
 }
 
 .login__card::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -60px;
   right: -60px;
@@ -235,7 +235,14 @@
     right: -40px;
     width: 240px;
     height: 240px;
-    clip-path: polygon(100% 100%, -200% 100%, -200% calc(100% - 40px), calc(100% - 40px) calc(100% - 40px), calc(100% - 40px) -200%, 100% -200%);
+    clip-path: polygon(
+      100% 100%,
+      -200% 100%,
+      -200% calc(100% - 40px),
+      calc(100% - 40px) calc(100% - 40px),
+      calc(100% - 40px) -200%,
+      100% -200%
+    );
   }
 }
 

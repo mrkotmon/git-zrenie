@@ -27,7 +27,11 @@ const PERMISSIONS = [
 ];
 
 function CheckIcon() {
-  return <span className="login__check" aria-hidden="true">✓</span>;
+  return (
+    <span className="login__check" aria-hidden="true">
+      ✓
+    </span>
+  );
 }
 
 function LockIcon() {
@@ -42,9 +46,7 @@ function LockIcon() {
 export default function Login() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const { user, loading, isAuthenticated, error, initialized } = useSelector(
-    (state) => state.auth
-  );
+  const { user, loading, isAuthenticated, initialized } = useSelector((state) => state.auth);
 
   const code = searchParams.get('code');
 
@@ -78,7 +80,15 @@ export default function Login() {
   // Уже авторизован — Redirect на главную
   if (isAuthenticated || (initialized && user)) {
     return (
-      <main className="login-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <main
+        className="login-page"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+        }}
+      >
         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <Button variant="contained" size="large" fullWidth sx={{ maxWidth: 400, mt: 2 }}>
             Продолжить в приложение
@@ -91,7 +101,15 @@ export default function Login() {
   // Загрузка сессии — показываем заглушку
   if (loading && !initialized) {
     return (
-      <main className="login-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <main
+        className="login-page"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+        }}
+      >
         <div style={{ color: 'var(--gz-text-secondary)' }}>Вход…</div>
       </main>
     );
@@ -104,7 +122,13 @@ export default function Login() {
           <img src={logoUrl} alt="" width="40" height="40" />
           <span>Git Зрение</span>
         </Link>
-        <Button className="login-header__home" component={Link} to="/" variant="outlined" color="inherit">
+        <Button
+          className="login-header__home"
+          component={Link}
+          to="/"
+          variant="outlined"
+          color="inherit"
+        >
           На главную
         </Button>
       </header>
@@ -115,7 +139,8 @@ export default function Login() {
             <img className="login__logo" src={logoUrl} alt="" width="64" height="64" />
             <h1 id="login-title">Вход в Git Зрение</h1>
             <p className="login__intro">
-              Мы читаем историю репозиториев от вашего имени, поэтому вход только через GitHub. Пароль не нужен.
+              Мы читаем историю репозиториев от вашего имени, поэтому вход только через GitHub.
+              Пароль не нужен.
             </p>
 
             <Button
@@ -138,7 +163,8 @@ export default function Login() {
                   <CheckIcon />
                   <div>
                     <div className="login__permission-heading">
-                      <span>{title}</span><code>{scope}</code>
+                      <span>{title}</span>
+                      <code>{scope}</code>
                     </div>
                     <p>{description}</p>
                   </div>
@@ -148,7 +174,9 @@ export default function Login() {
 
             <aside className="login__privacy">
               <LockIcon />
-              <p>Мы ничего не пишем в ваши репозитории. Доступ можно отозвать в настройках GitHub.</p>
+              <p>
+                Мы ничего не пишем в ваши репозитории. Доступ можно отозвать в настройках GitHub.
+              </p>
             </aside>
 
             <div>
