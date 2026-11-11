@@ -5,8 +5,6 @@ import logoUrl from '../../../assets/icons/logo.svg';
 import BurgerIcon from '../../../components/icons/BurgerIcon.jsx';
 import GithubIcon from '../../../components/icons/GithubIcon.jsx';
 
-const AUTH_URL = '/api/auth/github';
-
 const NAV_ITEMS = [
   { label: 'Для кого', href: '#audience' },
   { label: 'Возможности', href: '#features' },
@@ -36,7 +34,8 @@ export default function Header() {
             className="header__login"
             variant="outlined"
             color="primary"
-            href={AUTH_URL}
+            component={RouterLink}
+            to="/login"
             startIcon={<GithubIcon size={16} />}
           >
             Войти
@@ -61,7 +60,9 @@ export default function Header() {
             className="drawer__login"
             variant="outlined"
             color="primary"
-            href={AUTH_URL}
+            component={RouterLink}
+            to="/login"
+            onClick={closeMenu}
             startIcon={<GithubIcon />}
           >
             Войти
