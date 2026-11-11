@@ -18,7 +18,7 @@ function mockFetch(response, status = 200) {
       status,
       json: () => Promise.resolve(response),
       text: () => Promise.resolve(JSON.stringify(response)),
-    })
+    }),
   );
 }
 
@@ -34,7 +34,7 @@ describe('authApi', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: 'abc123' }),
         credentials: 'include',
-      })
+      }),
     );
     expect(res).toEqual({ user: { id: 1, login: 'demo' } });
   });
@@ -51,7 +51,7 @@ describe('authApi', () => {
     expect(res).toEqual({ id: 1, login: 'demo' });
     expect(globalThis.fetch).toHaveBeenCalledWith(
       '/api/auth/me',
-      expect.objectContaining({ method: 'GET', credentials: 'include' })
+      expect.objectContaining({ method: 'GET', credentials: 'include' }),
     );
   });
 
@@ -67,7 +67,7 @@ describe('authApi', () => {
 
     expect(globalThis.fetch).toHaveBeenCalledWith(
       '/api/auth/logout',
-      expect.objectContaining({ method: 'POST', credentials: 'include' })
+      expect.objectContaining({ method: 'POST', credentials: 'include' }),
     );
   });
 });

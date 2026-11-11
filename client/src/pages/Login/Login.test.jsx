@@ -8,7 +8,6 @@ import { createStore } from '../../store/store.js';
 import { theme } from '../../theme/theme.js';
 import { exchangeGithubCode } from '../../lib/authApi.js';
 
-
 vi.mock('../../lib/authApi.js', async (importOriginal) => {
   const actual = await importOriginal();
   return {
@@ -33,7 +32,7 @@ function renderLogin({ preloadedState = {}, initialEntries = ['/login'] } = {}) 
           <Login />
         </MemoryRouter>
       </ThemeProvider>
-    </Provider>
+    </Provider>,
   );
 }
 
@@ -81,7 +80,6 @@ describe('Login page', () => {
     expect(screen.getByText('Вход…')).toBeInTheDocument();
   });
 });
-
 
 describe('Login page с кодом авторизации', () => {
   it('если есть ?code в URL — обменивает его и показывает кнопку продолжения', async () => {
