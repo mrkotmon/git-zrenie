@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+  // На GitHub Pages сайт лежит в /git-zrenie/, локально — в корне.
+  base: process.env.BASE_PATH || '/',
   plugins: [react()],
   test: {
     environment: 'jsdom',
