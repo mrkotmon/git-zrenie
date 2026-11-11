@@ -8,7 +8,7 @@ let db;
 let app;
 let github;
 
-// По умолчанию — PGlite в памяти. С TEST_DATABASE_URL тесты идут на настоящем PostgreSQL.
+// По умолчанию PGlite. С TEST_DATABASE_URL тесты идут на настоящем PostgreSQL - то есть в нашу бд.
 const databaseUrl = process.env.TEST_DATABASE_URL;
 
 beforeEach(async () => {
