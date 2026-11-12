@@ -149,9 +149,11 @@ describe('сессия', () => {
     expect(response.json()).toMatchObject({ github_id: 42, login: 'ada' });
   });
 
-  it('/api/auth/me без входа отвечает 401', async () => {
+  it('/api/auth/me без входа отвечает 401 и не трогает cookie', async () => {
     const response = await app.inject({ method: 'GET', url: '/api/auth/me' });
     expect(response.statusCode).toBe(401);
+    // Запрос «кто я», отправленный до входа, не должен стереть сессию, выданную после.
+    expect(response.headers['set-cookie']).toBeUndefined();
   });
 
   it('не принимает подделанную cookie', async () => {
@@ -163,6 +165,8 @@ describe('сессия', () => {
     });
 
     expect(response.statusCode).toBe(401);
+    const session = response.cookies.find((c) => c.name === 'gz_session');
+    expect(session.value).toBe('');
   });
 
   it('выход удаляет сессию', async () => {
