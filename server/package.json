@@ -1,0 +1,33 @@
+{
+  "name": "git-zrenie-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --env-file-if-exists=.env src/index.js",
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "@fastify/cookie": "^11.1.5",
+    "fastify": "^5.12.8",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^5.1.0",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.0",
+    "vitest": "^5.1.0"
+  }
+}

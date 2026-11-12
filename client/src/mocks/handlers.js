@@ -18,10 +18,10 @@ export const handlers = [
   // Обмен кода на пользователя — бэкенд пишет в таблицу `users` (github_id, login, avatar_url)
   http.post('/api/auth/github/callback', async ({ request }) => {
     const body = await request.json().catch(() => ({}));
-    const { code } = body;
+    const { code, state } = body;
 
-    if (!code) {
-      return HttpResponse.json({ error: 'code is required' }, { status: 400 });
+    if (!code || !state) {
+      return HttpResponse.json({ error: 'code and state are required' }, { status: 400 });
     }
 
     // Заглушка: как будто бэкенд нашёл/создал пользователя в БД
