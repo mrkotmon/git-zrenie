@@ -15,18 +15,25 @@ export const AUTH_ENDPOINTS = {
  * создаёт/обновляет строку в таблице `users` и возвращает данные пользователя.
  *
  * @param {string} code — код из параметра URL ?code=XXX после редиректа с GitHub
+ * @param {string} state — значение ?state=XXX: сервер сверяет его с cookie (защита от CSRF)
  * @returns {Promise<{user: {id, github_id, login, avatar_url, created_at}}>}
  */
-export async function exchangeGithubCode(code) {
+export async function exchangeGithubCode(code, state) {
   const res = await fetch(AUTH_ENDPOINTS.githubCallback, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code }),
+    body: JSON.stringify({ code, state }),
     credentials: 'include',
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(text || 'Ошибка обмена кода GitHub');
+    let message = text;
+    try {
+      message = JSON.parse(text).message ?? text;
+    } catch {
+      // ответ не JSON — показываем как есть
+    }
+    throw new Error(message || 'Ошибка обмена кода GitHub');
   }
   return res.json();
 }

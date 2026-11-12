@@ -25,18 +25,23 @@ function mockFetch(response, status = 200) {
 describe('authApi', () => {
   it('exchangeGithubCode отправляет POST с кодом и возвращает пользователя', async () => {
     mockFetch({ user: { id: 1, login: 'demo' } });
-    const res = await exchangeGithubCode('abc123');
+    const res = await exchangeGithubCode('abc123', 'st-1');
 
     expect(globalThis.fetch).toHaveBeenCalledWith(
       '/api/auth/github/callback',
       expect.objectContaining({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: 'abc123' }),
+        body: JSON.stringify({ code: 'abc123', state: 'st-1' }),
         credentials: 'include',
       }),
     );
     expect(res).toEqual({ user: { id: 1, login: 'demo' } });
+  });
+
+  it('exchangeGithubCode показывает сообщение сервера', async () => {
+    mockFetch({ error: 'invalid_state', message: 'Сессия входа устарела.' }, 400);
+    await expect(exchangeGithubCode('c', 's')).rejects.toThrow('Сессия входа устарела.');
   });
 
   it('exchangeGithubCode бросает ошибку при 400', async () => {
