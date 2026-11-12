@@ -71,8 +71,10 @@ const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
         state.loading = false;
-        state.isAuthenticated = false;
         state.initialized = true;
+        // Ответ «нет сессии» мог прийти уже после входа через GitHub (setUser) —
+        // тогда он устарел и не должен разлогинивать пользователя.
+        if (!state.user) state.isAuthenticated = false;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;

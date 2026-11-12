@@ -8,17 +8,6 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--gz-border);
-}
-
-.repo-header__logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--gz-text);
-  font-weight: 600;
-  text-decoration: none;
 }
 
 .repo-header__title {
@@ -43,6 +32,7 @@
   margin-left: auto;
   color: var(--gz-text-secondary);
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .repo-main {
@@ -286,13 +276,11 @@
 @media (max-width: 600px) {
   .repo-header {
     flex-wrap: wrap;
-    gap: 8px 16px;
-    padding: 12px 16px;
+    gap: 4px 16px;
   }
 
-  .repo-header__title {
-    order: 3;
-    width: 100%;
+  .repo-header__github {
+    margin-left: 0;
   }
 
   .repo-main {

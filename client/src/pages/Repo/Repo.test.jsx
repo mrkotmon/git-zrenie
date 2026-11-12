@@ -7,6 +7,7 @@ import Repo from './Repo.jsx';
 import { createStore } from '../../store/store.js';
 import { theme } from '../../theme/theme.js';
 import { getRepoCommits } from '../../api/github.js';
+import { loadRecentRepos } from '../../lib/recentRepos.js';
 
 vi.mock('../../api/github.js', () => ({ getRepoCommits: vi.fn() }));
 
@@ -61,6 +62,16 @@ describe('Repo', () => {
     expect(screen.getByText('последних коммитов основной ветки').previousSibling).toHaveTextContent(
       '2',
     );
+  });
+
+  it('запоминает открытый репозиторий для «Моих разборов»', async () => {
+    localStorage.clear();
+    vi.mocked(getRepoCommits).mockResolvedValue(commits);
+    renderRepo();
+
+    await screen.findByRole('img', { name: 'Коммиты по дням' });
+    expect(loadRecentRepos()).toMatchObject([{ owner: 'acme', name: 'app' }]);
+    localStorage.clear();
   });
 
   it('показывает детали коммита по клику и закрывает их', async () => {

@@ -1,9 +1,12 @@
 import { Button } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import heroGraph from '../../../assets/images/hero-graph.png';
 import GithubIcon from '../../../components/icons/GithubIcon.jsx';
 
 export default function Hero() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="container hero__grid">
@@ -23,10 +26,11 @@ export default function Hero() {
               className="hero__primary"
               variant="contained"
               size="large"
-              href="/api/auth/github"
+              component={RouterLink}
+              to={isAuthenticated ? '/runs' : '/login'}
               startIcon={<GithubIcon />}
             >
-              Войти через GitHub
+              {isAuthenticated ? 'Мои разборы' : 'Войти через GitHub'}
             </Button>
             <Button
               className="hero__secondary"
