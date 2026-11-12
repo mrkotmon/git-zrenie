@@ -1,19 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import searchIcon from '../../../assets/icons/search.svg';
-import {
-  authUrlFor,
-  normalizeRepoUrl,
-  repoSubmitted,
-  repoUrlChanged,
-} from '../../../store/landingSlice.js';
+import { normalizeRepoUrl, repoSubmitted, repoUrlChanged } from '../../../store/landingSlice.js';
 
-/**
- * @param {{ redirect?: (url: string) => void }} props
- * redirect вынесен в пропс, чтобы проверять переход без реальной навигации.
- */
-export default function Cta({ redirect = (url) => window.location.assign(url) }) {
+export default function Cta() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const repoUrl = useSelector((state) => state.landing.repoUrl);
   const error = useSelector((state) => state.landing.error);
 
@@ -22,7 +15,8 @@ export default function Cta({ redirect = (url) => window.location.assign(url) })
     dispatch(repoSubmitted());
     const normalized = normalizeRepoUrl(repoUrl);
     if (normalized) {
-      redirect(authUrlFor(normalized));
+      // https://github.com/owner/repo(.git) → /repo/owner/repo
+      navigate(`/repo/${normalized.replace('https://github.com/', '').replace(/\.git$/, '')}`);
     }
   };
 
@@ -70,7 +64,7 @@ export default function Cta({ redirect = (url) => window.location.assign(url) })
               {error}
             </p>
           )}
-          <p className="cta__hint">Понадобится вход через GitHub</p>
+          <p className="cta__hint">Публичные репозитории открываются без входа</p>
         </div>
       </div>
     </section>
