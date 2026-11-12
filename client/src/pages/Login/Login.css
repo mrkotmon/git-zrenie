@@ -286,30 +286,6 @@
   color: var(--gz-text-secondary);
 }
 
-.login__signed-in {
-  display: grid;
-  justify-items: center;
-  gap: 16px;
-  width: min(400px, 100% - 32px);
-}
-
-.login__signed-in .MuiButton-root {
-  width: 100%;
-}
-
-.login__avatar {
-  border-radius: 50%;
-}
-
-.login__signed-in-text {
-  margin: 0;
-  color: var(--gz-text-secondary);
-}
-
-.login__signed-in-text strong {
-  color: var(--gz-text);
-}
-
 .login__error {
   margin: 0 0 16px;
   padding: 12px 16px;

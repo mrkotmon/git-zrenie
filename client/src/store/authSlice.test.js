@@ -72,6 +72,16 @@ describe('authSlice extraReducers: fetchCurrentUser', () => {
     expect(state.initialized).toBe(true);
     expect(state.user).toBe(null);
   });
+
+  it('rejected не разлогинивает, если пользователь уже вошёл, пока шёл запрос', () => {
+    const state = reducer(
+      { ...initialState, loading: true, user: demoUser, isAuthenticated: true, initialized: true },
+      fetchCurrentUser.rejected(new Error('no session'), 'requestId'),
+    );
+    expect(state.isAuthenticated).toBe(true);
+    expect(state.user).toEqual(demoUser);
+    expect(state.loading).toBe(false);
+  });
 });
 
 describe('authSlice extraReducers: logoutUser', () => {

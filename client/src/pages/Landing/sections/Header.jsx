@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Drawer, IconButton } from '@mui/material';
 import logoUrl from '../../../assets/icons/logo.svg';
 import BurgerIcon from '../../../components/icons/BurgerIcon.jsx';
 import GithubIcon from '../../../components/icons/GithubIcon.jsx';
+import UserMenu from '../../../components/UserMenu.jsx';
 
 const NAV_ITEMS = [
   { label: 'Для кого', href: '#audience' },
@@ -13,6 +15,7 @@ const NAV_ITEMS = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const closeMenu = () => setMenuOpen(false);
 
   return (
@@ -30,16 +33,7 @@ export default function Header() {
           ))}
         </nav>
         <div className="header__actions">
-          <Button
-            className="header__login"
-            variant="outlined"
-            color="primary"
-            component={RouterLink}
-            to="/login"
-            startIcon={<GithubIcon size={16} />}
-          >
-            Войти
-          </Button>
+          <UserMenu className="header__login" />
           <IconButton
             className="header__burger"
             aria-label="Открыть меню"
@@ -61,11 +55,11 @@ export default function Header() {
             variant="outlined"
             color="primary"
             component={RouterLink}
-            to="/login"
+            to={isAuthenticated ? '/runs' : '/login'}
             onClick={closeMenu}
             startIcon={<GithubIcon />}
           >
-            Войти
+            {isAuthenticated ? 'Мои разборы' : 'Войти'}
           </Button>
         </nav>
       </Drawer>

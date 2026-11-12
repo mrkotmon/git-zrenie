@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import Login from './Login.jsx';
 import { createStore } from '../../store/store.js';
@@ -30,12 +30,23 @@ const demoUser = {
   created_at: '2026-09-11T10:00:00Z',
 };
 
+const signedIn = {
+  auth: { user: demoUser, loading: false, error: null, isAuthenticated: true, initialized: true },
+};
+
+function CurrentPath() {
+  return <p data-testid="path">{useLocation().pathname}</p>;
+}
+
 function renderLogin({ preloadedState = {}, initialEntries = ['/login'] } = {}) {
   return render(
     <Provider store={createStore(preloadedState)}>
       <ThemeProvider theme={theme}>
         <MemoryRouter initialEntries={initialEntries}>
-          <Login />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<CurrentPath />} />
+          </Routes>
         </MemoryRouter>
       </ThemeProvider>
     </Provider>,
@@ -48,25 +59,21 @@ describe('Login page', () => {
 
     expect(screen.getByRole('heading', { name: 'Вход в Git Зрение' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Войти через GitHub/ })).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Продолжить в приложение' })).not.toBeInTheDocument();
   });
 
-  it('вошёл: показывает кнопку продолжения и скрывает ссылку входа', () => {
+  it('вошёл: сразу переводит в «Мои разборы»', () => {
+    renderLogin({ preloadedState: signedIn });
+
+    expect(screen.getByTestId('path')).toHaveTextContent('/runs');
+  });
+
+  it('возвращает на страницу, с которой отправили на вход', () => {
     renderLogin({
-      preloadedState: {
-        auth: {
-          user: demoUser,
-          loading: false,
-          error: null,
-          isAuthenticated: true,
-          initialized: true,
-        },
-      },
+      preloadedState: signedIn,
+      initialEntries: [{ pathname: '/login', state: { from: '/repo/acme/app' } }],
     });
 
-    expect(screen.getByRole('link', { name: 'Продолжить в приложение' })).toBeInTheDocument();
-    expect(screen.getByText('@demo-user')).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /Войти через GitHub/ })).not.toBeInTheDocument();
+    expect(screen.getByTestId('path')).toHaveTextContent('/repo/acme/app');
   });
 
   it('загрузка сессии: показывает заглушку "Вход…"', () => {
@@ -87,14 +94,13 @@ describe('Login page', () => {
 });
 
 describe('Login page с кодом авторизации', () => {
-  it('если есть ?code в URL — обменивает его вместе со state и показывает пользователя', async () => {
+  it('обменивает ?code вместе со state и переводит в «Мои разборы»', async () => {
     vi.mocked(exchangeGithubCode).mockResolvedValue({ user: demoUser });
 
     renderLogin({ initialEntries: ['/login?code=abc123&state=st-1'] });
 
+    expect(await screen.findByTestId('path')).toHaveTextContent('/runs');
     expect(exchangeGithubCode).toHaveBeenCalledWith('abc123', 'st-1');
-    await screen.findByRole('link', { name: 'Продолжить в приложение' });
-    expect(screen.getByText('@demo-user')).toBeInTheDocument();
     expect(exchangeGithubCode).toHaveBeenCalledTimes(1);
   });
 
@@ -112,30 +118,6 @@ describe('Login page с кодом авторизации', () => {
 
     renderLogin();
 
-    expect(await screen.findByText('@demo-user')).toBeInTheDocument();
-  });
-
-  it('кнопка «Выйти» завершает сессию', async () => {
-    const realFetch = globalThis.fetch;
-    globalThis.fetch = vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve('') });
-    renderLogin({
-      preloadedState: {
-        auth: {
-          user: demoUser,
-          loading: false,
-          error: null,
-          isAuthenticated: true,
-          initialized: true,
-        },
-      },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: 'Выйти' }));
-    expect(await screen.findByRole('link', { name: /Войти через GitHub/ })).toBeInTheDocument();
-    expect(globalThis.fetch).toHaveBeenCalledWith(
-      '/api/auth/logout',
-      expect.objectContaining({ method: 'POST' }),
-    );
-    globalThis.fetch = realFetch;
+    expect(await screen.findByTestId('path')).toHaveTextContent('/runs');
   });
 });
