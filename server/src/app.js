@@ -84,7 +84,9 @@ export function buildApp({ db, github, config, logger = false }) {
     const userId = Number(readSignedCookie(request, SESSION_COOKIE));
     const user = userId ? await findUserById(db, userId) : null;
     if (!user) {
-      reply.clearCookie(SESSION_COOKIE, { path: '/' });
+      // Чистим только испорченную или устаревшую cookie. Если cookie не было, ответ без
+      // Set-Cookie: иначе запоздавший 401 стёр бы сессию, только что выданную при входе.
+      if (request.cookies[SESSION_COOKIE]) reply.clearCookie(SESSION_COOKIE, { path: '/' });
       return reply.code(401).send({ error: 'unauthorized' });
     }
     return user;
