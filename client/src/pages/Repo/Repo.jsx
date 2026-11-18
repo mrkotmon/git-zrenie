@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
-import logoUrl from '../../assets/icons/logo.svg';
+import AppHeader from '../../components/AppHeader.jsx';
 import BarChart from '../../components/charts/BarChart.jsx';
 import {
   authorName,
@@ -12,6 +12,7 @@ import {
   firstLine,
   summarize,
 } from '../../lib/commitStats.js';
+import { rememberRepo } from '../../lib/recentRepos.js';
 import { commitSelected, loadCommits, selectSelectedCommit } from '../../store/repoSlice.js';
 import './Repo.css';
 
@@ -113,27 +114,30 @@ export default function Repo() {
   const retry = () => dispatch(loadCommits({ owner, name }));
   const ready = status === 'succeeded' && key === `${owner}/${name}`;
 
+  // Удачно открытый репозиторий попадает в «Недавно открытые» на странице «Мои разборы».
+  useEffect(() => {
+    if (ready) rememberRepo({ owner, name });
+  }, [ready, owner, name]);
+
   return (
     <div className="repo-page">
-      <header className="repo-header">
-        <Link className="repo-header__logo" to="/">
-          <img src={logoUrl} alt="" width="30" height="30" />
-          <span>Git Зрение</span>
-        </Link>
-        <h1 className="repo-header__title">
-          <span>{owner}</span>
-          <span className="repo-header__slash">/</span>
-          <strong>{name}</strong>
-        </h1>
-        <a
-          className="repo-header__github"
-          href={`https://github.com/${owner}/${name}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Репозиторий на GitHub
-        </a>
-      </header>
+      <AppHeader>
+        <div className="repo-header">
+          <h1 className="repo-header__title">
+            <span>{owner}</span>
+            <span className="repo-header__slash">/</span>
+            <strong>{name}</strong>
+          </h1>
+          <a
+            className="repo-header__github"
+            href={`https://github.com/${owner}/${name}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Репозиторий на GitHub
+          </a>
+        </div>
+      </AppHeader>
 
       <main className="repo-main">
         {(status === 'loading' || status === 'idle') && (

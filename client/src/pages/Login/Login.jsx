@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, Link } from 'react-router-dom';
+import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import logoUrl from '../../assets/icons/logo.svg';
 import GithubIcon from '../../components/icons/GithubIcon.jsx';
 import { AUTH_ENDPOINTS, exchangeGithubCode, fetchCurrentUserApi } from '../../lib/authApi.js';
-import { logoutUser, setUser, setInitialized } from '../../store/authSlice.js';
+import { setUser, setInitialized } from '../../store/authSlice.js';
 import './Login.css';
 
 const PERMISSIONS = [
@@ -46,7 +46,8 @@ function LockIcon() {
 export default function Login() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const { user, loading, isAuthenticated, initialized } = useSelector((state) => state.auth);
+  const location = useLocation();
+  const { loading, isAuthenticated, initialized } = useSelector((state) => state.auth);
 
   const code = searchParams.get('code');
   const state = searchParams.get('state');
@@ -81,26 +82,9 @@ export default function Login() {
     }
   }, [code, state, dispatch, initialized, loading]);
 
-  // Уже вошёл: показываем, кто в системе (данные из таблицы users)
-  if (isAuthenticated || (initialized && user)) {
-    return (
-      <main className="login-page login-page--centered">
-        <section className="login__signed-in" aria-label="Вы вошли">
-          {user?.avatar_url && (
-            <img className="login__avatar" src={user.avatar_url} alt="" width="72" height="72" />
-          )}
-          <p className="login__signed-in-text">
-            Вы вошли как <strong>@{user?.login}</strong>
-          </p>
-          <Button variant="contained" size="large" component={Link} to="/">
-            Продолжить в приложение
-          </Button>
-          <Button variant="outlined" color="inherit" onClick={() => dispatch(logoutUser())}>
-            Выйти
-          </Button>
-        </section>
-      </main>
-    );
+  // Уже вошёл — сразу в «Мои разборы» или на страницу, с которой отправили на вход
+  if (isAuthenticated) {
+    return <Navigate to={location.state?.from ?? '/runs'} replace />;
   }
 
   // Загрузка сессии — показываем заглушку

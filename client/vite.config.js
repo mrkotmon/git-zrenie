@@ -20,6 +20,7 @@ export default defineConfig({
         'src/setupTests.js',
         'src/**/*.test.{js,jsx}',
         'src/mocks/handlers.js',
+        'src/test/**',
       ],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
