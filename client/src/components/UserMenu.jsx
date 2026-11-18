@@ -52,18 +52,9 @@ export default function UserMenu({ className = '' }) {
         onClick={(event) => setAnchor(event.currentTarget)}
       >
         {user.avatar_url ? (
-          <img
-            className="user-menu__avatar"
-            src={user.avatar_url}
-            alt=""
-            width="32"
-            height="32"
-          />
+          <img className="user-menu__avatar" src={user.avatar_url} alt="" width="32" height="32" />
         ) : (
-          <span
-            className="user-menu__avatar user-menu__avatar--empty"
-            aria-hidden="true"
-          >
+          <span className="user-menu__avatar user-menu__avatar--empty" aria-hidden="true">
             {user.login.slice(0, 1).toUpperCase()}
           </span>
         )}

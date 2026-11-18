@@ -22,21 +22,18 @@ export const fetchCurrentUser = createAsyncThunk(
 /**
  * Завершает сессию на сервере.
  */
-export const logoutUser = createAsyncThunk(
-  'auth/logoutUser',
-  async (_, { rejectWithValue }) => {
-    const response = await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
+export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
+  const response = await fetch('/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include',
+  });
 
-    if (!response.ok) {
-      return rejectWithValue(await response.text());
-    }
+  if (!response.ok) {
+    return rejectWithValue(await response.text());
+  }
 
-    return null;
-  },
-);
+  return null;
+});
 
 const initialState = {
   user: null,
@@ -106,11 +103,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {
-  setUser,
-  requestLogout,
-  clearError,
-  setInitialized,
-} = authSlice.actions;
+export const { setUser, requestLogout, clearError, setInitialized } = authSlice.actions;
 
 export default authSlice.reducer;

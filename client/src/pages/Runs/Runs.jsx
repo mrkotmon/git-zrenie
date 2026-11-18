@@ -38,13 +38,7 @@ function ProfileCard({ user, recentCount, onLogout }) {
     <aside className="runs-side" aria-label="Профиль">
       <section className="runs-card runs-profile">
         <div className="runs-profile__head">
-          {user.avatar_url && (
-            <img
-              className="runs-profile__avatar"
-              src={user.avatar_url}
-              alt=""
-            />
-          )}
+          {user.avatar_url && <img className="runs-profile__avatar" src={user.avatar_url} alt="" />}
 
           <div>
             <h2 className="runs-profile__name">{user.login}</h2>
@@ -70,9 +64,7 @@ function ProfileCard({ user, recentCount, onLogout }) {
 
         <div className="runs-profile__stat">
           <span className="runs-profile__stat-value">{recentCount}</span>
-          <span className="runs-profile__stat-label">
-            недавних репозиториев
-          </span>
+          <span className="runs-profile__stat-label">недавних репозиториев</span>
         </div>
       </section>
 
@@ -120,11 +112,7 @@ export default function Runs() {
       <AppHeader />
 
       <main className="runs-main">
-        <ProfileCard
-          user={user}
-          recentCount={recent.length}
-          onLogout={logout}
-        />
+        <ProfileCard user={user} recentCount={recent.length} onLogout={logout} />
 
         <div className="runs-content">
           <h1 className="runs-title">Мои разборы</h1>
@@ -134,13 +122,7 @@ export default function Runs() {
           </p>
 
           <form className="runs-search" onSubmit={handleSubmit} noValidate>
-            <img
-              className="runs-search__icon"
-              src={searchIcon}
-              alt=""
-              width="22"
-              height="22"
-            />
+            <img className="runs-search__icon" src={searchIcon} alt="" width="22" height="22" />
 
             <label className="visually-hidden" htmlFor="runs-repo">
               Репозиторий GitHub
@@ -166,36 +148,24 @@ export default function Runs() {
           </form>
 
           {error && (
-            <p
-              id="runs-repo-error"
-              className="runs-search__error"
-              role="alert"
-            >
+            <p id="runs-repo-error" className="runs-search__error" role="alert">
               {error}
             </p>
           )}
 
           {recent.length > 0 ? (
-            <section
-              className="runs-card runs-history"
-              aria-labelledby="runs-history-title"
-            >
+            <section className="runs-card runs-history" aria-labelledby="runs-history-title">
               <div className="runs-history__head">
                 <h2 id="runs-history-title" className="runs-history__title">
                   Недавно открытые <span>{recent.length}</span>
                 </h2>
 
-                <p className="runs-history__hint">
-                  Список хранится в этом браузере
-                </p>
+                <p className="runs-history__hint">Список хранится в этом браузере</p>
               </div>
 
               <ul className="runs-history__list">
                 {recent.map((repo) => (
-                  <li
-                    key={`${repo.owner}/${repo.name}`}
-                    className="runs-history__item"
-                  >
+                  <li key={`${repo.owner}/${repo.name}`} className="runs-history__item">
                     <div className="runs-history__repo">
                       <span className="runs-history__name">
                         {repo.owner}/{repo.name}
@@ -206,11 +176,7 @@ export default function Runs() {
                       </span>
                     </div>
 
-                    <Button
-                      variant="outlined"
-                      color="inherit"
-                      onClick={() => open(repo)}
-                    >
+                    <Button variant="outlined" color="inherit" onClick={() => open(repo)}>
                       Открыть
                     </Button>
 
@@ -227,17 +193,12 @@ export default function Runs() {
               </ul>
             </section>
           ) : (
-            <section
-              className="runs-card runs-empty"
-              aria-labelledby="runs-empty-title"
-            >
+            <section className="runs-card runs-empty" aria-labelledby="runs-empty-title">
               <h2 id="runs-empty-title" className="runs-empty__title">
                 Разберём первый репозиторий
               </h2>
 
-              <p className="runs-empty__text">
-                Вставьте ссылку выше или попробуйте на примере.
-              </p>
+              <p className="runs-empty__text">Вставьте ссылку выше или попробуйте на примере.</p>
 
               <div className="runs-empty__examples">
                 {EXAMPLES.map((repo) => (

@@ -1,10 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  fireEvent,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import UserMenu from './UserMenu.jsx';
 import RequireAuth from './RequireAuth.jsx';
 import {
@@ -24,9 +19,7 @@ describe('UserMenu', () => {
       preloadedState: signedOutState,
     });
 
-    expect(
-      screen.getByRole('link', { name: 'Войти' }),
-    ).toHaveAttribute('href', '/login');
+    expect(screen.getByRole('link', { name: 'Войти' })).toHaveAttribute('href', '/login');
   });
 
   it('после входа — аватар и логин, меню с разделами', () => {
@@ -39,17 +32,16 @@ describe('UserMenu', () => {
     });
 
     expect(trigger).toHaveTextContent('ada');
-    expect(
-      screen.queryByRole('link', { name: 'Войти' }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Войти' })).not.toBeInTheDocument();
 
     fireEvent.click(trigger);
 
     const menu = screen.getByRole('menu');
 
-    expect(
-      within(menu).getByRole('menuitem', { name: 'Мои разборы' }),
-    ).toHaveAttribute('href', '/runs');
+    expect(within(menu).getByRole('menuitem', { name: 'Мои разборы' })).toHaveAttribute(
+      'href',
+      '/runs',
+    );
 
     expect(
       within(menu).getByRole('menuitem', {
@@ -71,9 +63,7 @@ describe('UserMenu', () => {
       preloadedState: signedInState,
     });
 
-    fireEvent.click(
-      screen.getByRole('button', { name: /Меню пользователя/ }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: /Меню пользователя/ }));
     fireEvent.click(screen.getByRole('menuitem', { name: 'Выйти' }));
 
     await waitFor(() => {
@@ -99,9 +89,7 @@ describe('UserMenu', () => {
       },
     });
 
-    expect(
-      screen.getByRole('button', { name: /Меню пользователя/ }),
-    ).toHaveTextContent('A');
+    expect(screen.getByRole('button', { name: /Меню пользователя/ })).toHaveTextContent('A');
   });
 });
 
@@ -123,9 +111,7 @@ describe('RequireAuth', () => {
       },
     });
 
-    expect(
-      screen.getByRole('status', { name: 'Проверяем вход' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: 'Проверяем вход' })).toBeInTheDocument();
   });
 
   it('не вошёл — отправляет на /login', () => {

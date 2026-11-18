@@ -27,11 +27,7 @@ export default function App() {
 
   // Запускаем запрос выхода, когда пользователь уже перешёл на главную.
   useEffect(() => {
-    if (
-      !logoutRequested ||
-      location.pathname !== '/' ||
-      logoutStarted.current
-    ) {
+    if (!logoutRequested || location.pathname !== '/' || logoutStarted.current) {
       return;
     }
 

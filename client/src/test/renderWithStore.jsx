@@ -1,11 +1,6 @@
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import {
-  MemoryRouter,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { createStore } from '../store/store.js';
 import { theme } from '../theme/theme.js';
@@ -50,10 +45,7 @@ export function CurrentPath() {
  * Рендерит переданный компонент на одном маршруте.
  * Используется для тестов отдельных компонентов.
  */
-export function renderWithStore(
-  element,
-  { path = '/', url = path, preloadedState } = {},
-) {
+export function renderWithStore(element, { path = '/', url = path, preloadedState } = {}) {
   const store = createStore(preloadedState);
 
   render(

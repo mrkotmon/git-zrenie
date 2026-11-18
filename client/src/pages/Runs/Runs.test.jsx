@@ -1,16 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  fireEvent,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import Runs from './Runs.jsx';
 import { rememberRepo } from '../../lib/recentRepos.js';
-import {
-  renderApp,
-  renderWithStore,
-  signedInState,
-} from '../../test/renderWithStore.jsx';
+import { renderApp, renderWithStore, signedInState } from '../../test/renderWithStore.jsx';
 
 function renderRuns() {
   return renderWithStore(<Runs />, {
@@ -33,13 +25,12 @@ describe('Мои разборы', () => {
     });
 
     expect(profile).toHaveTextContent('@ada');
-    expect(profile).toHaveTextContent(
-      'В Git Зрении с 15 сентября 2026',
-    );
+    expect(profile).toHaveTextContent('В Git Зрении с 15 сентября 2026');
 
-    expect(
-      screen.getByRole('link', { name: /github\.com\/ada/ }),
-    ).toHaveAttribute('href', 'https://github.com/ada');
+    expect(screen.getByRole('link', { name: /github\.com\/ada/ })).toHaveAttribute(
+      'href',
+      'https://github.com/ada',
+    );
   });
 
   it('без истории предлагает примеры', () => {
@@ -51,34 +42,23 @@ describe('Мои разборы', () => {
       }),
     ).toBeVisible();
 
-    fireEvent.click(
-      screen.getByRole('button', { name: /vitejs\/vite/ }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: /vitejs\/vite/ }));
 
-    expect(screen.getByTestId('path')).toHaveTextContent(
-      '/repo/vitejs/vite',
-    );
+    expect(screen.getByTestId('path')).toHaveTextContent('/repo/vitejs/vite');
   });
 
   it('открывает репозиторий по ссылке или owner/name', () => {
     renderRuns();
 
-    fireEvent.change(
-      screen.getByLabelText('Репозиторий GitHub'),
-      {
-        target: {
-          value: 'https://github.com/facebook/react',
-        },
+    fireEvent.change(screen.getByLabelText('Репозиторий GitHub'), {
+      target: {
+        value: 'https://github.com/facebook/react',
       },
-    );
+    });
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Разобрать' }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Разобрать' }));
 
-    expect(screen.getByTestId('path')).toHaveTextContent(
-      '/repo/facebook/react',
-    );
+    expect(screen.getByTestId('path')).toHaveTextContent('/repo/facebook/react');
   });
 
   it('показывает ошибку для неверного ввода и сбрасывает её при правке', () => {
@@ -90,9 +70,7 @@ describe('Мои разборы', () => {
       target: { value: 'не репозиторий' },
     });
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Разобрать' }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Разобрать' }));
 
     expect(screen.getByRole('alert')).toHaveTextContent('owner/name');
 
@@ -109,9 +87,7 @@ describe('Мои разборы', () => {
 
     renderRuns();
 
-    expect(
-      screen.getByRole('heading', { name: /Недавно открытые/ }),
-    ).toHaveTextContent('2');
+    expect(screen.getByRole('heading', { name: /Недавно открытые/ })).toHaveTextContent('2');
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -123,9 +99,7 @@ describe('Мои разборы', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Открыть' }));
 
-    expect(screen.getByTestId('path')).toHaveTextContent(
-      '/repo/acme/app',
-    );
+    expect(screen.getByTestId('path')).toHaveTextContent('/repo/acme/app');
   });
 
   it('кнопка «Выйти» завершает сессию', async () => {
