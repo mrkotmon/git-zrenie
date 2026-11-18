@@ -1,36 +1,42 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 /**
- * Получает текущего авторизованного пользователя из БД через бэкенд.
- * Бэкенд сверяет сессионную куку с таблицей `users` (github_id, login, avatar_url).
+ * Получает текущего авторизованного пользователя с сервера.
  */
 export const fetchCurrentUser = createAsyncThunk(
   'auth/fetchCurrentUser',
   async (_, { rejectWithValue }) => {
-    const res = await fetch('/api/auth/me', {
+    const response = await fetch('/api/auth/me', {
       method: 'GET',
       credentials: 'include',
     });
-    if (!res.ok) {
-      return rejectWithValue(await res.text());
+
+    if (!response.ok) {
+      return rejectWithValue(await response.text());
     }
-    return res.json();
+
+    return response.json();
   },
 );
 
 /**
- * Выход пользователя — бэкенд уничтожает сессию и чистит запись о сессии.
+ * Завершает сессию на сервере.
  */
-export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
-  const res = await fetch('/api/auth/logout', {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!res.ok) {
-    return rejectWithValue(await res.text());
-  }
-  return null;
-});
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { rejectWithValue }) => {
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      return rejectWithValue(await response.text());
+    }
+
+    return null;
+  },
+);
 
 const initialState = {
   user: null,
@@ -38,6 +44,7 @@ const initialState = {
   error: null,
   isAuthenticated: false,
   initialized: false,
+  logoutRequested: false,
 };
 
 const authSlice = createSlice({
@@ -49,10 +56,17 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.error = null;
       state.initialized = true;
+      state.logoutRequested = false;
     },
+
+    requestLogout(state) {
+      state.logoutRequested = true;
+    },
+
     clearError(state) {
       state.error = null;
     },
+
     setInitialized(state) {
       state.initialized = true;
     },
@@ -72,18 +86,31 @@ const authSlice = createSlice({
       .addCase(fetchCurrentUser.rejected, (state) => {
         state.loading = false;
         state.initialized = true;
-        // Ответ «нет сессии» мог прийти уже после входа через GitHub (setUser) —
-        // тогда он устарел и не должен разлогинивать пользователя.
-        if (!state.user) state.isAuthenticated = false;
+
+        // Не сбрасываем пользователя, если ответ об отсутствии сессии устарел.
+        if (!state.user) {
+          state.isAuthenticated = false;
+        }
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
         state.initialized = true;
+        state.logoutRequested = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.error = action.payload || 'Не удалось завершить сессию';
+        state.logoutRequested = false;
       });
   },
 });
 
-export const { setUser, clearError, setInitialized } = authSlice.actions;
+export const {
+  setUser,
+  requestLogout,
+  clearError,
+  setInitialized,
+} = authSlice.actions;
+
 export default authSlice.reducer;

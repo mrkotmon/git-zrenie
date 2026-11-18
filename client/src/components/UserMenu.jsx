@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Button, Divider, Menu, MenuItem } from '@mui/material';
 import GithubIcon from './icons/GithubIcon.jsx';
-import { logoutUser } from '../store/authSlice.js';
+import { requestLogout } from '../store/authSlice.js';
 import './UserMenu.css';
 
-/** Кнопка «Войти» до входа и аватар с меню после. */
+/** Кнопка входа или меню авторизованного пользователя. */
 export default function UserMenu({ className = '' }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const [anchor, setAnchor] = useState(null);
 
@@ -28,12 +29,16 @@ export default function UserMenu({ className = '' }) {
     );
   }
 
-  const close = () => setAnchor(null);
-  // Сначала уходим на главную: страница, где открыто меню, может требовать входа.
+  const close = () => {
+    setAnchor(null);
+  };
+
   const logout = () => {
     close();
+
+    // App выполнит запрос выхода после перехода на главную.
+    dispatch(requestLogout());
     navigate('/', { replace: true });
-    dispatch(logoutUser());
   };
 
   return (
@@ -47,17 +52,29 @@ export default function UserMenu({ className = '' }) {
         onClick={(event) => setAnchor(event.currentTarget)}
       >
         {user.avatar_url ? (
-          <img className="user-menu__avatar" src={user.avatar_url} alt="" width="32" height="32" />
+          <img
+            className="user-menu__avatar"
+            src={user.avatar_url}
+            alt=""
+            width="32"
+            height="32"
+          />
         ) : (
-          <span className="user-menu__avatar user-menu__avatar--empty" aria-hidden="true">
+          <span
+            className="user-menu__avatar user-menu__avatar--empty"
+            aria-hidden="true"
+          >
             {user.login.slice(0, 1).toUpperCase()}
           </span>
         )}
+
         <span className="user-menu__login-name">{user.login}</span>
+
         <span className="user-menu__chevron" aria-hidden="true">
           ▾
         </span>
       </button>
+
       <Menu
         anchorEl={anchor}
         open={Boolean(anchor)}
@@ -68,6 +85,7 @@ export default function UserMenu({ className = '' }) {
         <MenuItem component={RouterLink} to="/runs" onClick={close}>
           Мои разборы
         </MenuItem>
+
         <MenuItem
           component="a"
           href={`https://github.com/${user.login}`}
@@ -77,7 +95,9 @@ export default function UserMenu({ className = '' }) {
         >
           Профиль на GitHub
         </MenuItem>
+
         <Divider />
+
         <MenuItem onClick={logout}>Выйти</MenuItem>
       </Menu>
     </>

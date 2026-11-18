@@ -1,22 +1,46 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import RequireAuth from './components/RequireAuth.jsx';
 import Graph from './pages/Graph/Graph.jsx';
 import Landing from './pages/Landing/Landing.jsx';
 import Login from './pages/Login/Login.jsx';
 import Repo from './pages/Repo/Repo.jsx';
 import Runs from './pages/Runs/Runs.jsx';
-import { fetchCurrentUser } from './store/authSlice.js';
+import { fetchCurrentUser, logoutUser } from './store/authSlice.js';
 
 export default function App() {
   const dispatch = useDispatch();
-  const initialized = useSelector((state) => state.auth.initialized);
+  const location = useLocation();
 
-  // Один раз при запуске узнаём у сервера, вошёл ли пользователь (по cookie сессии).
+  const initialized = useSelector((state) => state.auth.initialized);
+  const logoutRequested = useSelector((state) => state.auth.logoutRequested);
+
+  const logoutStarted = useRef(false);
+
+  // При запуске приложения проверяем, есть ли действующая сессия.
   useEffect(() => {
-    if (!initialized) dispatch(fetchCurrentUser());
+    if (!initialized) {
+      dispatch(fetchCurrentUser());
+    }
   }, [dispatch, initialized]);
+
+  // Запускаем запрос выхода, когда пользователь уже перешёл на главную.
+  useEffect(() => {
+    if (
+      !logoutRequested ||
+      location.pathname !== '/' ||
+      logoutStarted.current
+    ) {
+      return;
+    }
+
+    logoutStarted.current = true;
+
+    dispatch(logoutUser()).finally(() => {
+      logoutStarted.current = false;
+    });
+  }, [dispatch, location.pathname, logoutRequested]);
 
   return (
     <Routes>
@@ -32,7 +56,6 @@ export default function App() {
           </RequireAuth>
         }
       />
-      {/* Остальные пути пока отдают лендинг, как SPA-fallback. */}
       <Route path="*" element={<Landing />} />
     </Routes>
   );
